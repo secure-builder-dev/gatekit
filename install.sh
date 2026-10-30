@@ -28,4 +28,4 @@ touch Makefile
 grep -qxF "$line" Makefile || printf '\n%s\n' "$line" >> Makefile
 
 # Read answers from the keyboard even though this script came in through a pipe.
-if [ -r /dev/tty ]; then make gatekit-init < /dev/tty; else make gatekit-init; fi
+if { : < /dev/tty; } 2>/dev/null; then make gatekit-init < /dev/tty; else make gatekit-init < /dev/null; fi
