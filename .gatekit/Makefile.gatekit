@@ -1,0 +1,22 @@
+# Gatekit — add this one line to your repo's Makefile:
+#
+#   include .gatekit/Makefile.gatekit
+#
+# Then run `make gatekit-init` once.
+
+.PHONY: gatekit-init scans patch gates-light gates-heavy
+
+gatekit-init: ## First-time setup
+	@bash .gatekit/gk init
+
+scans: ## Run every scanner, auto-patch what has a fix, re-scan
+	@bash .gatekit/gk scans
+
+patch: ## Fix everything fixable, run your tests, re-scan; commits only if tests pass
+	@bash .gatekit/gk patch
+
+gates-light: ## Quick review: do the tests prove the code, plus the basic security checklist
+	@bash .gatekit/gk gate light
+
+gates-heavy: ## Full review: light, plus an attacker-style review and an edge-case hunt
+	@bash .gatekit/gk gate heavy

@@ -1,0 +1,25 @@
+name: test
+
+on:
+  push:
+  pull_request:
+  workflow_call:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Every script parses
+        run: for f in $(git ls-files '*.sh') .gatekit/gk; do bash -n "$f" || exit 1; done
+      - name: Scanner self-tests
+        run: bash .gatekit/scan/tests/scan-test-runner.sh
+      - name: Mutation check
+        run: bash tests/mutation-smoke.sh
+      - name: Gate wiring (fake reviewer)
+        run: bash tests/gate-smoke.sh
+      - name: End-to-end on a sample app
+        run: bash tests/e2e.sh

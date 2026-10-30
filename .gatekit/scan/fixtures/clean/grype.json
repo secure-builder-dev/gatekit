@@ -1,0 +1,9 @@
+{
+  "matches": [],
+  "source": {
+    "type": "image",
+    "target": {"userInput": "sample-api:latest", "imageID": "sha256:aaa111bbb222ccc333", "tags": ["sample-api:latest"]}
+  },
+  "distro": {"name": "debian", "version": "11", "idLike": []},
+  "descriptor": {"name": "grype", "version": "0.74.0", "configuration": {}}
+}

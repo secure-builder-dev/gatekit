@@ -1,0 +1,6 @@
+# hadolint.yaml — the Dockerfile linter's settings. Read by .gatekit/scan/run-hadolint.sh.
+#
+# Nothing is ignored by default. If your Dockerfiles need a rule switched off, add it under
+# `ignored:` with a comment saying why. The key must be `ignored:` (hadolint silently ignores `ignore:`).
+ignored: []
+failure-threshold: error

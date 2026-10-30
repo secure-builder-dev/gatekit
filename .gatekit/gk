@@ -1,0 +1,27 @@
+#!/usr/bin/env bash
+# gk — the one entry point. The make targets in Makefile.gatekit call this.
+#
+#   gk init            first-time setup
+#   gk scans           scan, auto-patch, re-scan
+#   gk patch           fix what's fixable, test, commit if green
+#   gk gate light      quick review
+#   gk gate heavy      full review
+set -uo pipefail
+HERE="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+. "$HERE/lib/common.sh"
+. "$HERE/lib/update.sh"
+
+cmd="${1:-}"; shift || true
+
+if [ "$cmd" != init ] && [ ! -f "$GK_CONFIG" ]; then
+  gk_die "not set up yet — run: make gatekit-init"
+fi
+gk_self_update "$cmd" "$@"
+
+case "$cmd" in
+  init)  exec bash "$GK_DIR/init.sh" "$@" ;;
+  scans) exec bash "$GK_DIR/scans.sh" "$@" ;;
+  patch) exec bash "$GK_DIR/patch.sh" "$@" ;;
+  gate)  exec bash "$GK_DIR/gate/run-gate.sh" "$@" ;;
+  *)     echo "usage: make gatekit-init | scans | patch | gates-light | gates-heavy"; exit 2 ;;
+esac

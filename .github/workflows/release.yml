@@ -1,0 +1,54 @@
+name: weekly release
+
+# Every Monday: bump each scanner to its newest version, run the tests, and if anything changed
+# and the tests pass, publish a new gatekit release. Teams' copies pick it up automatically.
+on:
+  schedule:
+    - cron: "0 6 * * 1"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  bump:
+    runs-on: ubuntu-latest
+    outputs:
+      changed: ${{ steps.bump.outputs.changed }}
+    steps:
+      - uses: actions/checkout@v4
+      - id: bump
+        name: Bump scanners
+        run: |
+          bash release/bump-scanners.sh
+          if git diff --quiet; then echo "changed=false" >> "$GITHUB_OUTPUT"; else echo "changed=true" >> "$GITHUB_OUTPUT"; fi
+      - name: Every script parses
+        if: steps.bump.outputs.changed == 'true'
+        run: for f in $(git ls-files '*.sh') .gatekit/gk; do bash -n "$f" || exit 1; done
+      - name: Scanner self-tests
+        if: steps.bump.outputs.changed == 'true'
+        run: bash .gatekit/scan/tests/scan-test-runner.sh
+      - name: Mutation check
+        if: steps.bump.outputs.changed == 'true'
+        run: bash tests/mutation-smoke.sh
+      - name: Gate wiring (fake reviewer)
+        if: steps.bump.outputs.changed == 'true'
+        run: bash tests/gate-smoke.sh
+      - name: End-to-end on a sample app (real scanners)
+        if: steps.bump.outputs.changed == 'true'
+        run: bash tests/e2e.sh
+      - name: Release
+        if: steps.bump.outputs.changed == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          cur=$(sed -nE 's/^version:[[:space:]]*//p' .gatekit/VERSION)
+          new=$(echo "$cur" | awk -F. '{print $1"."$2"."$3+1}')
+          sed -i -E "s/^version:.*/version: $new/; s/^released:.*/released: $(date -u +%F)/" .gatekit/VERSION
+          git config user.name "gatekit-release"
+          git config user.email "gatekit-release@users.noreply.github.com"
+          git commit -am "release v$new: scanner updates"
+          git tag "v$new"
+          git push origin HEAD "v$new"
+          gh release create "v$new" --title "v$new" --notes "Scanner updates:
+          $(git diff HEAD~1 -- .gatekit/scan/tool-versions.env | grep '^+SCAN' | sed 's/^+/- /')"

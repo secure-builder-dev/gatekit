@@ -1,0 +1,4 @@
+.gatekit/.state/
+.gatekit/records/*/scan/
+.DS_Store
+__pycache__/
