@@ -63,8 +63,9 @@ repeat it; say where it is.
    the six questions in `CHECKLIST.md` § Control questions **in sentences**. A question answered
    with just "PASS" or left blank is blocking. On light, write `Control questions: skipped (light)`.
 9. **Heavy only: attacker review and edge-case hunt.** Follow
-   `.gatekit/skills/review-adversarial-general/SKILL.md`, then
-   `.gatekit/skills/review-edge-case-hunter/SKILL.md`, against the diff. Zero findings is fine.
+   `.gatekit/skills/attacker-review/SKILL.md`, then
+   `.gatekit/skills/edge-case-hunt/SKILL.md`, against the range. Each finding they mark blocking
+   becomes a ticket. Zero findings is fine.
    On light, write `Attacker/edge-case: skipped (light)`.
 10. **New dependencies.** Any package added in the range: no known high or critical CVE, no
     GPL/AGPL licence, lockfile updated.
