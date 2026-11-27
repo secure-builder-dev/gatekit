@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
-# run-eslint.sh — run each app's own `lint` script (it must start with eslint), with --max-warnings 0, and collect the results.
+# run-eslint.sh — run each app's own `lint` script (it must start with eslint) with
+# --max-warnings 0, and collect the results.
 set -uo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"

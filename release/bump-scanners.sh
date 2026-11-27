@@ -2,8 +2,7 @@
 # bump-scanners.sh — move each pinned scanner in .gatekit/scan/tool-versions.env to its newest
 # release on Docker Hub. Run weekly by .github/workflows/release.yml; prints what moved.
 #
-# ClamAV stays on its moving `stable` tag on purpose: its virus signatures ship inside the image,
-# so pinning it would freeze the signatures.
+# ClamAV is left alone: see the note in tool-versions.env.
 set -euo pipefail
 cd "$(git rev-parse --show-toplevel)"
 F=.gatekit/scan/tool-versions.env

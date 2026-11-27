@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
-# mutate-controls.sh — for each control in .gatekit/CONTROLS.md, break it on purpose and run the tests. The tests must fail; if they still pass, nothing really tests that control. Every file is restored afterwards, even on Ctrl-C.
+# mutate-controls.sh — break each control in .gatekit/CONTROLS.md on purpose and run the tests.
+# If the tests still pass, nothing really tests that control. Every file is put back afterwards.
 #
 # Usage: mutate-controls.sh [--dry-run] [--only CM-01,CM-02] [--no-baseline]
 #   MUTATE_TEST_CMD   the test command (gatekit passes TEST_COMMAND from config.yaml)
@@ -21,7 +22,6 @@ done
 
 [ -f "$MANIFEST" ] || { printf 'CONTROL MANIFEST: none at %s — nothing to mutate\n' "$MANIFEST"; exit 2; }
 
-# The suite: MUTATE_TEST_CMD (gatekit passes TEST_COMMAND from config.yaml), else `npm test`.
 TEST_CMD="${MUTATE_TEST_CMD:-npm test}"
 # Optional faster first try per control: MUTATE_TARGET_CMD with {tests} replaced by the row's test files.
 TARGET_TMPL="${MUTATE_TARGET_CMD:-}"

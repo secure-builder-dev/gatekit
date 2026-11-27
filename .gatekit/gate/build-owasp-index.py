@@ -2,8 +2,8 @@
 """build-owasp-index.py — build the OWASP Top 10 index (web and LLM) the gate checks against.
 
 OWASP renumbers between editions, so this keeps every edition's IDs and titles, and marks which
-edition is current. Reads checkouts of github.com/OWASP/Top10 and the OWASP Top 10 for LLM
-Applications repo; writes .gatekit/frameworks/owasp-index.json. Run by refresh-frameworks.sh.
+edition is current. Reads checkouts of OWASP's Top 10 and Top 10 for LLM
+Applications; writes .gatekit/frameworks/owasp-index.json. Run by refresh-frameworks.sh.
 
 Usage: build-owasp-index.py <Top10 checkout> <LLM Top 10 checkout> <out.json>
 """

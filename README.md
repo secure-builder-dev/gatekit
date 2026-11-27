@@ -131,8 +131,9 @@ Everything in `records/` is committed on your branch, so reviewers see it in the
   `gatekit: update to vX.Y.Z`. If it can't reach GitHub for 14 days, it stops until it can.
 - **Scanners** are bumped weekly in this repo, tested, and released.
 - **CVE lists** download fresh on every scan.
-- **Security rules** (NIST 800-53, OWASP Top 10, DISA STIGs) are fetched fresh on every review.
-  Each gate-log line records which edition it used, so you can always see why something passed.
+- **Security rules** (NIST 800-53, OWASP Top 10, DISA STIGs) are fetched before a review, at most
+  once a day. Each gate-log line records which edition it used, so you can always see why
+  something passed.
 
 ---
 

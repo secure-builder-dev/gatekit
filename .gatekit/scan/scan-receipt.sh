@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
-# scan-receipt.sh — each scanner records that it actually ran (or had nothing in scope). A scanner with no receipt counts as "did not run", never as clean.
+# scan-receipt.sh — each scanner records that it ran. A scanner with no receipt counts as
+# "did not run", never as clean.
 
 _scan_receipt_file() {
   printf '%s/scanners-ran' "${SCAN_RECEIPT_DIR:-${RESULTS_DIR:-${SCAN_RESULTS_DIR:-.}}}"

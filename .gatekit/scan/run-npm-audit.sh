@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
-# run-npm-audit.sh — npm audit for each app. High/Critical advisories in production dependencies block; dev-only ones and lower severities are reported. Exceptions go in .gatekit/npm-audit-allowlist.yaml with a reason, an owner and an expiry date.
+# run-npm-audit.sh — npm audit for each app. High and critical advisories in production
+# dependencies block; the rest are reported. Exceptions go in .gatekit/npm-audit-allowlist.yaml.
 set -uo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"

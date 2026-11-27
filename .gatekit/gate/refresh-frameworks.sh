@@ -3,7 +3,7 @@
 # indexes in .gatekit/frameworks/ that the gate checks against.
 #
 #   NIST SP 800-53 rev 5        from NIST's official OSCAL catalogue
-#   OWASP Top 10 (web and LLM)  from the OWASP project repos
+#   OWASP Top 10 (web and LLM)  from OWASP
 #   DISA STIGs                  from ComplianceAsCode, which republishes them openly
 #   NIST publication list       from NIST, to tell whether a cited SP/FIPS is current
 #

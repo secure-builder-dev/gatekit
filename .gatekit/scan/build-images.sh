@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
-# build-images.sh — build each app's Docker image fresh (pulling the newest base image) so the image scanners check what your code builds today.
+# build-images.sh — build each app's Docker image fresh, so the image scanners check what your
+# code builds today.
 
 set -uo pipefail
 cd "$(git rev-parse --show-toplevel 2>/dev/null || echo .)" || exit 1

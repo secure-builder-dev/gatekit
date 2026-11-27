@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
-# sql-scan.sh — look for SQL built by gluing strings together (template literals or +) instead of using parameters. Mark a false positive on its line with: sql-scan: allow
+# sql-scan.sh — look for SQL built by joining strings instead of using parameters.
+# Mark a false positive on its line with: sql-scan: allow
 
 set -uo pipefail
 cd "$(git rev-parse --show-toplevel)" || exit 1

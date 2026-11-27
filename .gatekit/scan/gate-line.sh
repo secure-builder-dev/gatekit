@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
-# gate-line.sh — print the one-line scan verdict (PASS/FAIL, scanners that ran, fixable count, POAM count). With GATE_LINE_STAMP=1 it also records which commit was scanned.
+# gate-line.sh — print the one-line scan verdict.
+# With GATE_LINE_STAMP=1 it also records which commit was scanned.
 set -uo pipefail
 cd "$(git rev-parse --show-toplevel 2>/dev/null || echo .)" || exit 0
 R="${SCAN_RESULTS_DIR:-.gatekit/records/scan-latest}"

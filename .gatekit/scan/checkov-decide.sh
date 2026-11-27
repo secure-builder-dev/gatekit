@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
-# checkov-decide.sh — decide which Checkov failures block: every failed check blocks unless .gatekit/checkov-justifications.yaml has an unexpired entry for it.
+# checkov-decide.sh — decide which Checkov failures block. Every failed check blocks unless
+# .gatekit/checkov-justifications.yaml has an unexpired entry for it.
 set -uo pipefail
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PROJECT_ROOT="$(cd "$SCRIPT_DIR/../.." && pwd)"

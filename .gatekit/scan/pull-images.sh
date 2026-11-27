@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# pull-images.sh — pull every scanner image before scanning. A failed pull fails the scan: no scanner, no result.
+# pull-images.sh — pull every scanner image before scanning. A failed pull fails the scan.
 set -uo pipefail
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 # shellcheck source=tool-runner.sh

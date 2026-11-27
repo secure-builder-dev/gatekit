@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
-# image-age-guard.sh — refuse to scan an old Docker image as if it were current. Tune with SCAN_MAX_IMAGE_AGE_HOURS, or SCAN_ALLOW_STALE=1 to accept it.
+# image-age-guard.sh — refuse to scan an old Docker image as if it were current.
+# Change the limit with SCAN_MAX_IMAGE_AGE_HOURS, or accept an old image with SCAN_ALLOW_STALE=1.
 
 _ts_to_epoch() {
   local ts="${1%%.*}"; ts="${ts%Z}"; ts="${ts%+00:00}"

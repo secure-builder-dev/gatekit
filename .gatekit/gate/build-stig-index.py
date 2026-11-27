@@ -2,7 +2,7 @@
 """build-stig-index.py — build the DISA STIG rule index the gate checks against.
 
 DISA's STIGs are republished openly by the ComplianceAsCode project. This reads a checkout of
-github.com/ComplianceAsCode/content and writes .gatekit/frameworks/stig-index.json: each STIG's
+that content and writes .gatekit/frameworks/stig-index.json: each STIG's
 rule IDs and titles. Run by refresh-frameworks.sh.
 
 Usage: build-stig-index.py <ComplianceAsCode checkout> <out.json>
