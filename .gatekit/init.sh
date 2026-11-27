@@ -3,7 +3,7 @@
 #
 #   1. Checks the tools gatekit needs are installed.
 #   2. Works out where your apps are, how to run your tests, and your main branch.
-#   3. Finds your Windshift connection in Claude Code.
+#   3. Asks which Claude Code connection is your ticket tracker, if you have one (optional).
 #   4. Writes .gatekit/config.yaml and shows it to you.
 #   5. Asks whether to create a controls manifest (.gatekit/CONTROLS.md).
 #   6. Installs the gate reviewer and /implement into .claude/, and updates .gitignore.
@@ -60,10 +60,23 @@ fi
 BASE="$(git symbolic-ref --short refs/remotes/origin/HEAD 2>/dev/null | sed 's#^origin/##')"
 BASE="${BASE:-main}"
 
-# ── 3. Windshift ──────────────────────────────────────────────────────────────
-WINDSHIFT=""
-if command -v claude >/dev/null; then
-  WINDSHIFT="$(claude mcp list 2>/dev/null | grep -i windshift | head -1 | sed -E 's/^[[:space:]]*([^:[:space:]]+).*/\1/')"
+# ── 3. ticket tracker (optional) ──────────────────────────────────────────────
+# Any tracker with a connection (MCP server) in Claude Code works. Without one, tickets are
+# files on your branch and nothing else changes.
+TRACKER="$(gk_cfg TRACKER_MCP)"
+if [ -t 0 ] && command -v claude >/dev/null; then
+  conns="$(claude mcp list 2>/dev/null | sed -nE 's/^[[:space:]]*([A-Za-z0-9_.-]+):[[:space:]].*/\1/p' | tr '\n' ' ')"
+  if [ -n "${conns// /}" ]; then
+    echo "  Tickets are files on your branch. Gatekit can also copy them to a ticket tracker"
+    echo "  through one of your Claude Code connections: $conns"
+    a=""
+    read -r -p "  Which one is your ticket tracker? (Enter for ${TRACKER:-none}, or type none) " a
+    case "$a" in "") ;; none|NONE) TRACKER="" ;; *) TRACKER="$a" ;; esac
+    if [ -n "$TRACKER" ]; then
+      case " $conns " in *" $TRACKER "*) ;; *) echo "  Note: '$TRACKER' isn't in that list. Check the name with: claude mcp list" ;; esac
+    fi
+    echo ""
+  fi
 fi
 
 # ── 4. config.yaml ────────────────────────────────────────────────────────────
@@ -82,9 +95,9 @@ TEST_COMMAND: $TEST_COMMAND
 # The branch your pull requests merge into.
 BASE_BRANCH: $BASE
 
-# The name of your Windshift connection in Claude Code (from: claude mcp list).
-# Empty = tickets stay as files only.
-WINDSHIFT_MCP: $WINDSHIFT
+# Optional: your ticket tracker's connection in Claude Code (a name from: claude mcp list).
+# Set it and the review copies its tickets there. Empty = tickets stay as files only.
+TRACKER_MCP: $TRACKER
 EOF
 fi
 
@@ -98,7 +111,7 @@ for a in $(gk_cfg APPS); do
     || echo "  ⚠ $a/package.json has no \"lint\": \"eslint ...\" script. make scans needs one to lint $a."
 done
 [ -n "$(gk_cfg TEST_COMMAND)" ] || echo "  ⚠ Couldn't find how to run your tests. Set TEST_COMMAND in .gatekit/config.yaml."
-[ -n "$(gk_cfg WINDSHIFT_MCP)" ] || echo "  ⚠ No Windshift connection found in Claude Code. Tickets will stay as files until you add WINDSHIFT_MCP."
+[ -n "$(gk_cfg TRACKER_MCP)" ] || echo "  No ticket tracker set: tickets are files on your branch. To copy them to a tracker later, set TRACKER_MCP."
 echo "  If anything above is wrong, edit .gatekit/config.yaml."
 echo ""
 

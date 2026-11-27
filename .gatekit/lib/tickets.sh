@@ -1,7 +1,8 @@
 # tickets.sh — write ticket files. Sourced after common.sh.
 #
-# A ticket is .gatekit/records/<branch>/tickets/T-nnn.md. The gate sends any ticket without a
-# windshift_id to Windshift on its next run, so tickets written here get there too.
+# A ticket is .gatekit/records/<branch>/tickets/T-nnn.md. If a ticket tracker is set (TRACKER_MCP
+# in config.yaml), the gate copies any ticket without a tracker_id there on its next run, so
+# tickets written here get there too.
 
 # gk_ticket TITLE SEVERITY DONE_WHEN BODY [FOUND_BY] — write a ticket unless an open one has the same title.
 gk_ticket() {
@@ -20,7 +21,7 @@ status: open
 severity: $severity
 found_by: $found_by
 done_when: "$done_when"
-windshift_id:
+tracker_id:
 ---
 
 $body

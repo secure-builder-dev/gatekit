@@ -20,7 +20,7 @@ git checkout -qb feature/x
 echo 'module.exports = 1' > backend/index.js && git add -A && git commit -qm change
 
 cp -R "$KIT/.gatekit" .gatekit; rm -rf .gatekit/records .gatekit/.state
-printf 'APPS: backend\nTEST_COMMAND: true\nBASE_BRANCH: main\nWINDSHIFT_MCP:\n' > .gatekit/config.yaml
+printf 'APPS: backend\nTEST_COMMAND: true\nBASE_BRANCH: main\nTRACKER_MCP:\n' > .gatekit/config.yaml
 printf 'include .gatekit/Makefile.gatekit\n' > Makefile
 printf '.gatekit/.state/\n.gatekit/records/*/scan/\n' > .gitignore
 mkdir -p .claude/agents && cp .gatekit/agents/gatekit-gate.md .claude/agents/
@@ -67,4 +67,29 @@ pass "no PR → says where the verdict is"
 make gates-light > out2 2>&1
 grep -qF 'run:          2' handoff || fail "second run should be run 2"
 pass "run number advances"
+
+# The ticket tracker is optional: no setting → no tracker tools; a setting → that connection's tools.
+grep -qF 'tracker:      none' handoff || fail "with no TRACKER_MCP the handoff should say tracker: none"
+grep -q 'mcp__' args && fail "with no TRACKER_MCP the reviewer should get no tracker tools: $(cat args)"
+pass "no tracker set → none in the handoff, no tracker tools"
+
+sed -i.bak 's/^TRACKER_MCP:.*/TRACKER_MCP: mytracker/' .gatekit/config.yaml && rm -f .gatekit/config.yaml.bak
+git commit -qam "set tracker"
+echo "$(git rev-parse HEAD) PASS now" > .gatekit/records/feature-x/scan/.scan-stamp
+make gates-light > out3 2>&1
+grep -qF 'tracker:      mytracker' handoff || fail "handoff should name the tracker: $(grep tracker handoff)"
+grep -q 'mcp__mytracker' args || fail "reviewer should be allowed the tracker's tools: $(cat args)"
+pass "tracker set → named in the handoff, its tools allowed"
+
+# A repo set up with the old names is renamed in place and keeps working.
+sed -i.bak 's/^TRACKER_MCP:.*/WINDSHIFT_MCP: oldname/' .gatekit/config.yaml && rm -f .gatekit/config.yaml.bak
+printf -- '---\nid: T-009\ntitle: old ticket\nstatus: open\nwindshift_id: 42\n---\n' > .gatekit/records/feature-x/tickets/T-009.md
+git add -A && git commit -qm "old names"
+echo "$(git rev-parse HEAD) PASS now" > .gatekit/records/feature-x/scan/.scan-stamp
+make gates-light > out4 2>&1
+grep -q '^TRACKER_MCP: oldname$' .gatekit/config.yaml || fail "old setting not renamed: $(grep MCP .gatekit/config.yaml)"
+grep -q '^tracker_id: 42$' .gatekit/records/feature-x/tickets/T-009.md || fail "old ticket field not renamed"
+grep -qF 'tracker:      oldname' handoff || fail "renamed setting not used: $(grep tracker handoff)"
+[ -z "$(git status --porcelain -- .gatekit/config.yaml)" ] || fail "renamed config.yaml left uncommitted"
+pass "old setting and ticket field are renamed and still work"
 echo "GATE SMOKE PASS"
