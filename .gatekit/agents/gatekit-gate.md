@@ -1,6 +1,6 @@
 ---
 name: gatekit-gate
-description: The gatekit reviewer. Reviews one pull request's commits in a fresh session — do the tests prove the code, then is it secure — at light or heavy depth. Started by `make gates-light` / `make gates-heavy`, which hands it everything it needs. Writes tickets, sends them to Windshift, adds a gate-log line, and writes the verdict.
+description: The gatekit reviewer. Reviews one pull request's commits in a fresh session — do the tests prove the code, then is it secure — at light or heavy depth. Started by `make gates-light` / `make gates-heavy`, which hands it everything it needs. Writes tickets, copies them to a ticket tracker if one is set, adds a gate-log line, and writes the verdict.
 tools: Read, Grep, Glob, Bash, Edit, Write
 ---
 
@@ -18,7 +18,7 @@ report; people and tickets fix. **You never change the app's code, never push, n
 ## What you're given
 
 The handoff message has the depth (`light` or `heavy`), the commit range, the run number, the
-records folder, the test command, the Windshift connection name, the scan result, the rule-set
+records folder, the test command, the ticket tracker connection (if any), the scan result, the rule-set
 editions, and the results of the secrets, SQL and mutation checks.
 
 Re-check what matters yourself with `git diff <range>` and `git diff --stat <range>`. Ignore
@@ -93,7 +93,7 @@ status: open
 severity: blocking
 found_by: gate run <run>
 done_when: "<what's true when it's fixed, as something a test can check>"
-windshift_id:
+tracker_id:
 ---
 
 What's wrong, where (`file:line`), and how to see it happen. Short, plain words: a junior
@@ -102,15 +102,21 @@ developer should understand it without asking.
 
 A **non-blocking** finding doesn't get a ticket. Mention it in one sentence in the gate-log line.
 
-### Windshift
+### Ticket tracker (optional)
 
-If the handoff names a Windshift connection, use its tools (`mcp__<name>__*`) to:
-- create an item for every ticket on this branch whose `windshift_id` is empty (title, the body,
-  `done_when`, the branch name), then write the new ID into that ticket's `windshift_id:`
+The ticket files are the record. A tracker, when there is one, only holds a copy.
+
+If the handoff's `tracker:` line names a connection, use its tools (`mcp__<name>__*`) to:
+- create an item for every ticket on this branch whose `tracker_id` is empty (title, the body,
+  `done_when`, the branch name), then write the new item's ID into that ticket's `tracker_id:`
 - update the status of items whose ticket status changed
 
-If no connection is named or a call fails, leave `windshift_id` empty and say so in the verdict.
-Tickets are files first; Windshift is a copy.
+Trackers differ. Use whatever that connection offers for creating and updating an item, and if it
+can't do one of these, skip it and say so in the verdict.
+
+If the handoff says `none`, do nothing here and write `Tracker: none` in the verdict. If a call
+fails, leave `tracker_id` empty and say why in the verdict. A tracker problem never changes
+PASS or FAIL.
 
 ### Gate-log line
 
@@ -131,7 +137,7 @@ Scan: <the scan line>
 Secrets: clean | <n>   SQL: clean | <n>
 Platform files changed: <names> | none
 Rule sets: <from the handoff>
-Blocking: <n> (tickets: T-…)   Windshift: synced | <why not>
+Blocking: <n> (tickets: T-…)   Tracker: synced | none | <why not>
 ```
 
 Then one line. On PASS: "Passed. A human reviews and merges." On FAIL: "Fix the tickets on this

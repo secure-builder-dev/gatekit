@@ -28,6 +28,25 @@ GK_BRANCH="$(git rev-parse --abbrev-ref HEAD 2>/dev/null)"
 GK_REC="$GK_DIR/records/$(printf '%s' "$GK_BRANCH" | tr '/' '-')"
 GK_BASE="$(gk_cfg BASE_BRANCH main)"
 
+# Earlier versions called the tracker setting WINDSHIFT_MCP and the ticket field windshift_id.
+# Rename them where they're found, so repos set up back then keep working. This block can be
+# deleted once no repo still has the old names.
+gk_rename_old_tracker_names() {
+  local f
+  for f in "$GK_REC"/tickets/*.md; do
+    [ -f "$f" ] && grep -q '^windshift_id:' "$f" || continue
+    sed -E -i.bak 's/^windshift_id:/tracker_id:/' "$f" && rm -f "$f.bak"
+  done
+  [ -f "$GK_CONFIG" ] && grep -q '^WINDSHIFT_MCP:' "$GK_CONFIG" || return 0
+  sed -E -i.bak 's/^WINDSHIFT_MCP:/TRACKER_MCP:/; s/^# The name of your Windshift connection/# Optional: your ticket tracker'"'"'s connection/' "$GK_CONFIG" \
+    && rm -f "$GK_CONFIG.bak"
+  gk_say "renamed WINDSHIFT_MCP to TRACKER_MCP in .gatekit/config.yaml"
+  if git ls-files --error-unmatch "$GK_CONFIG" >/dev/null 2>&1; then
+    git commit -q -m "gatekit: rename the tracker setting to TRACKER_MCP" -- "$GK_CONFIG" || true
+  fi
+}
+gk_rename_old_tracker_names
+
 # The scanners read these. App folders come from APPS in config.yaml (default: the repo root).
 export GATEKIT_APPS="$(gk_cfg APPS .)"
 export NPM_AUDIT_APPS="$GATEKIT_APPS"

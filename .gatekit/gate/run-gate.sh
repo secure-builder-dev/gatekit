@@ -6,7 +6,8 @@
 #      which edition is used. If the fetch fails, stop — never review against old rules quietly.
 #   3. Run the mechanical checks: secrets, string-built SQL, and (heavy + CONTROLS.md) mutation.
 #   4. Hand everything to the gate reviewer: Claude, in a fresh session (.claude/agents/gatekit-gate.md).
-#      It writes tickets, sends them to Windshift, adds a gate-log line and writes the verdict.
+#      It writes tickets, copies them to your ticket tracker if one is set, adds a gate-log line
+#      and writes the verdict.
 #   5. Commit this branch's records and put the verdict in the PR description.
 set -uo pipefail
 HERE="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -90,9 +91,9 @@ RUNS="$(grep -c '^| 20' "$LOG" 2>/dev/null)"; RUN=$(( ${RUNS:-0} + 1 ))
 
 # ── 4. the reviewer ───────────────────────────────────────────────────────────
 rm -f "$GK_REC/verdict.md"
-WS="$(gk_cfg WINDSHIFT_MCP)"
+TRACKER="$(gk_cfg TRACKER_MCP)"     # optional: a Claude Code connection to a ticket tracker
 TOOLS="Bash Read Grep Glob Edit Write"
-[ -n "$WS" ] && TOOLS="$TOOLS mcp__$WS"
+[ -n "$TRACKER" ] && TOOLS="$TOOLS mcp__$TRACKER"
 
 PROMPT="$(cat <<EOF
 GATEKIT REVIEW
@@ -102,7 +103,7 @@ range:        $BASE..$HEAD_SHA   (short: $RANGE)
 run:          $RUN
 records:      ${GK_REC#$GK_ROOT/}
 test command: ${GK_TEST_COMMAND:-NONE SET — say so; Part 1 cannot pass without running the tests}
-windshift:    ${WS:-none configured — leave windshift_id empty and say so in the verdict}
+tracker:      ${TRACKER:-none — tickets stay as files; leave tracker_id empty}
 reviewer:     $(git config user.email)
 date:         $(date +%Y-%m-%d)
 

@@ -7,8 +7,8 @@ Security scans and an AI code review for every pull request, in one folder you d
 - **Lists** the ones with no fix yet for your POAM.
 - **Reviews** your pull request with Claude before a human looks at it.
 
-Problems the review finds become tickets on your branch, and in Windshift. You fix them on the same
-branch, so the fixes land in the same PR.
+Problems the review finds become tickets on your branch. You fix them on the same branch, so the
+fixes land in the same PR. If you use a ticket tracker, gatekit can copy the tickets there too.
 
 It's for full-stack web apps (Node/TypeScript backend and frontend, Docker images). It's a helper
 tool: nothing forces you to run it.
@@ -27,7 +27,7 @@ This copies the `.gatekit/` folder into your repo, adds one line to your `Makefi
 
 Setup (`make gatekit-init`) does four things:
 - works out where your apps are and how to run your tests
-- finds your Windshift connection in Claude Code
+- asks which of your Claude Code connections is your ticket tracker, if you have one (optional)
 - asks whether you want a **controls manifest** (see below)
 - installs the gate reviewer and `/implement` into `.claude/`
 
@@ -54,9 +54,22 @@ for the review. The `gh` (GitHub) or `glab` (GitLab) command lets the review add
 
 **These happen automatically:**
 - `make scans` runs `make patch` itself when it finds something fixable.
-- The review sends its tickets to Windshift.
+- The review copies its tickets to your ticket tracker, if you set one.
 - The review puts its verdict in your PR description.
 - Gatekit updates itself.
+
+### Ticket tracker (optional)
+
+Tickets are files on your branch, and that's all gatekit needs. If you'd also like them in your
+tracker (Jira, Linear, GitHub Issues, or anything else with a Claude Code connection), set its
+connection name in `.gatekit/config.yaml`:
+
+```
+TRACKER_MCP: <a name from: claude mcp list>
+```
+
+The review then creates one item per ticket and keeps its status up to date. Leave it empty and
+nothing is sent anywhere.
 
 ---
 
@@ -64,7 +77,7 @@ for the review. The `gh` (GitHub) or `glab` (GitLab) command lets the review add
 
 ```
 1. make scans                      → scans, auto-patches, re-scans
-2. make gates-light  (or -heavy)   → Claude reviews; tickets go to your branch and Windshift
+2. make gates-light  (or -heavy)   → Claude reviews; tickets go to your branch
 3. fix the tickets                 → /implement T-001 in Claude Code, or fix it yourself
 4. make gates-light  (or -heavy)   → again, until PASS; the verdict lands in your PR
 ```

@@ -46,4 +46,4 @@ When `done_when` is true and the suite is green:
 - commit the ticket file with the fix (or right after it)
 - say in two lines what changed and which test proves it
 
-The next gate run checks it and marks it `done` in Windshift.
+The next gate run checks it and marks it `done` (and in your ticket tracker, if one is set).
