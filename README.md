@@ -14,6 +14,9 @@ headed for IL4 and IL6 environments. It is built from what platform teams look f
 industry treats as standard, and what the governing rule sets require (NIST 800-53, OWASP Top 10,
 DISA STIGs). It also tests your tests, with mutation testing among the checks.
 
+At first, every part of the review was done by the AI model. Over time, each check that could be
+made mechanical was moved into a script.
+
 It sits on top of whatever harness you build with. It's one more tool for code review, most useful
 when you're building for those environments.
 
