@@ -83,8 +83,8 @@ for the review. The `gh` (GitHub) or `glab` (GitLab) command lets the review add
 ### Ticket tracker (optional)
 
 Tickets are files on your branch, and that's all gatekit needs. If you'd also like them in your
-tracker (Jira, Linear, GitHub Issues, or anything else with a Claude Code connection), set its
-connection name in `.gatekit/config.yaml`:
+tracker (Windshift, Jira, Linear, GitHub Issues, or anything else with a Claude Code connection),
+set its connection name in `.gatekit/config.yaml`:
 
 ```
 TRACKER_MCP: <a name from: claude mcp list>
@@ -159,6 +159,10 @@ Everything in `records/` is committed on your branch, so reviewers see it in the
 
 ---
 
+## Security
+
+Found a vulnerability? Please report it privately. See [SECURITY.md](SECURITY.md).
+
 ## Licence
 
-[Apache-2.0](LICENSE)
+Copyright 2026 Casey Houle. Licensed under [Apache-2.0](LICENSE).
