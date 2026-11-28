@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# scan-test-runner.sh — self-tests for the scanner scripts, using fake tools and the fixtures in ../fixtures. Never touches real scan results.
+# scan-test-runner.sh — self-tests for the scanner scripts, using fake tools and ../fixtures.
 
 set -uo pipefail
 

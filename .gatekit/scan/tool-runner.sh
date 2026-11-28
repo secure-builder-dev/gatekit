@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
-# tool-runner.sh — run a scanner either as a Docker/Podman container (default) or a locally installed tool (SCAN_ENGINE=native). Versions: tool-versions.env.
+# tool-runner.sh — run a scanner as a container (default) or as a locally installed tool
+# (SCAN_ENGINE=native). Versions are in tool-versions.env.
 
 _TR_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PROJECT_ROOT="${PROJECT_ROOT:-$(cd "$_TR_DIR/../.." && pwd)}"

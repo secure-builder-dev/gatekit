@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# run-hadolint.sh — lint every Dockerfile in your app folders with hadolint (settings: .gatekit/scan/hadolint.yaml).
+# run-hadolint.sh — lint every Dockerfile in your app folders (settings: .gatekit/scan/hadolint.yaml).
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"

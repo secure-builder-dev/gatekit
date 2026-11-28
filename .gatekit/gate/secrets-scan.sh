@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
-# secrets-scan.sh — look for passwords, keys and tokens in tracked files. Mark a false positive on its line with: secrets-scan: allow
+# secrets-scan.sh — look for passwords, keys and tokens in tracked files.
+# Mark a false positive on its line with: secrets-scan: allow
 
 set -uo pipefail
 cd "$(git rev-parse --show-toplevel)" || exit 1

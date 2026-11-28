@@ -1,12 +1,12 @@
 #!/usr/bin/env python3
 """build-nistpubs-index.py — which revision of each NIST SP and FIPS is the current one.
 
-Reads a checkout of github.com/usnistgov/NIST-Tech-Pubs and writes
+Reads a checkout of NIST's publication list and writes
 .gatekit/frameworks/nist-pubs-index.json, so the gate can tell a current publication from a
 superseded one. Drafts are listed separately and never counted as current. Run by
 refresh-frameworks.sh.
 
-Usage: build-nistpubs-index.py <NIST-Tech-Pubs checkout> <out.json>
+Usage: build-nistpubs-index.py <publication list checkout> <out.json>
 """
 import datetime, json, os, re, subprocess, sys
 

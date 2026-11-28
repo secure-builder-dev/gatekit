@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# run-trivy.sh — scan each built Docker image for known vulnerabilities (CVEs) with Trivy. Findings both Grype and Trivy agree on are the strongest.
+# run-trivy.sh — scan each built Docker image for known vulnerabilities (CVEs) with Trivy.
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"

@@ -70,7 +70,8 @@ if [ -t 0 ] && command -v claude >/dev/null; then
     echo "  Tickets are files on your branch. Gatekit can also copy them to a ticket tracker"
     echo "  through one of your Claude Code connections: $conns"
     a=""
-    read -r -p "  Which one is your ticket tracker? (Enter for ${TRACKER:-none}, or type none) " a
+    if [ -n "$TRACKER" ]; then hint="Enter to keep $TRACKER, or type none"; else hint="Enter to skip"; fi
+    read -r -p "  Which one is your ticket tracker? ($hint) " a
     case "$a" in "") ;; none|NONE) TRACKER="" ;; *) TRACKER="$a" ;; esac
     if [ -n "$TRACKER" ]; then
       case " $conns " in *" $TRACKER "*) ;; *) echo "  Note: '$TRACKER' isn't in that list. Check the name with: claude mcp list" ;; esac

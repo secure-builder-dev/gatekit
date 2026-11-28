@@ -33,7 +33,7 @@ fi
 SCAN_LINE="$(bash "$GK_DIR/scan/gate-line.sh" 2>/dev/null | tail -1)"
 
 # ── 2. latest rule sets ───────────────────────────────────────────────────────
-# Fetched at most once a day per machine (the STIG source is a large repo); every run records the edition used.
+# Fetched at most once a day per machine (the STIG download is large). Every run records the edition used.
 FW_STAMP="$GK_DIR/.state/frameworks-fetched"; mkdir -p "$GK_DIR/.state"
 if [ "$(cat "$FW_STAMP" 2>/dev/null)" != "$(date +%F)" ]; then
   gk_say "fetching the latest security rule sets (once a day)"

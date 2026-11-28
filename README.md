@@ -1,5 +1,27 @@
 # gatekit
 
+![How gatekit fits on top of your own build process: scan, auto-patch, a two-part review in a fresh session, then a human merges](docs/gatekit-flow.png)
+
+Over the past two years I've been building applications for IL4 and IL6 environments. Multiple
+packages have reached ATO and several more are in process.
+
+I started out using the BMAD Method for building and reviewing code, and later picked up Matt
+Pocock's skills and Addy Osmani's agent skills. Their influence runs through the harnesses I build
+with.
+
+Gatekit is the code-review side of that work: a fleshed-out method for scanning and reviewing code
+headed for IL4 and IL6 environments. It is built from what platform teams look for, what the
+industry treats as standard, and what the governing rule sets require (NIST 800-53, OWASP Top 10,
+DISA STIGs). It also tests your tests, with mutation testing among the checks.
+
+At first, inference was used for every part of the review. Over time, each check that could be
+made mechanical was moved into a script.
+
+It sits on top of whatever harness you build with. It's one more tool for code review, most useful
+when you're building for those environments.
+
+---
+
 Security scans and an AI code review for every pull request, in one folder you drop into your repo.
 
 - **Scans** your code and containers for known security problems.
@@ -131,8 +153,9 @@ Everything in `records/` is committed on your branch, so reviewers see it in the
   `gatekit: update to vX.Y.Z`. If it can't reach GitHub for 14 days, it stops until it can.
 - **Scanners** are bumped weekly in this repo, tested, and released.
 - **CVE lists** download fresh on every scan.
-- **Security rules** (NIST 800-53, OWASP Top 10, DISA STIGs) are fetched fresh on every review.
-  Each gate-log line records which edition it used, so you can always see why something passed.
+- **Security rules** (NIST 800-53, OWASP Top 10, DISA STIGs) are fetched before a review, at most
+  once a day. Each gate-log line records which edition it used, so you can always see why
+  something passed.
 
 ---
 

@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
-# generate-dispatch.sh — read the scanner results and sort every finding into "fixable" (dispatch.md) or "no fix yet" (poam-candidates.md). Runs no scanners itself.
+# generate-dispatch.sh — sort every scanner finding into "fixable" (dispatch.md) or "no fix yet"
+# (poam-candidates.md). Runs no scanners itself.
 
 set -euo pipefail
 
@@ -432,10 +433,10 @@ write_output() {
     fi
 
     if $has_poam; then
-      echo "## POAM Candidates (No Self-Healing — Manual Review Required)"
+      echo "## POAM candidates (no fix yet — a person has to review these)"
       echo ""
       echo "See \`poam-candidates.md\` in your branch's records folder for the full list."
-      echo "Follow \`.gatekit/POAM-GUIDE.md\` for POAM submission process."
+      echo "Follow \`.gatekit/POAM-GUIDE.md\` for the POAM submission process."
       echo ""
     fi
 
